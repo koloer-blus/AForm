@@ -3,7 +3,7 @@ import './index.less'
 import { Button, Form, Input } from 'antd'
 const Preview: React.FC = () => {
   return (
-    <div>
+    <div className="preview">
       <Form>
         <Form.Item>
           <Input></Input>
