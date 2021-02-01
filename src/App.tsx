@@ -1,9 +1,9 @@
 import React from 'react'
-import Home from '@/pages/Home'
+import LayoutPage from '@/pages/Layout/index'
 const App: React.FC = () => {
   return (
     <div className="App">
-      <Home></Home>
+      <LayoutPage></LayoutPage>
     </div>
   )
 }
