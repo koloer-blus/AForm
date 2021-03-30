@@ -1,6 +1,5 @@
 const path = require('path');
 const merge = require('webpack-merge');
-const baseWebpackConfig = require('./webpack.base');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -9,7 +8,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const NyanProgressPlugin = require('nyan-progress-webpack-plugin');
+
 const config = require('./config');
+const baseWebpackConfig = require('./webpack.base');
 const getClientEnvironment = require('./env');
 
 const productionGzipExtensions = ['js', 'css'];
@@ -33,7 +35,6 @@ module.exports = merge.smart(baseWebpackConfig, {
               {
                 loader: 'css-loader',
               },
-              'postcss-loader',
               {
                 loader: 'less-loader',
                 options: {
@@ -70,7 +71,6 @@ module.exports = merge.smart(baseWebpackConfig, {
     ]
   },
   plugins: [
-    // 清理打包目录
     new CleanWebpackPlugin(),
     new PreloadWebpackPlugin({
       rel: 'preload',
@@ -81,7 +81,6 @@ module.exports = merge.smart(baseWebpackConfig, {
         return 'script';
       },
       include: ['app']
-      // include:'allChunks'
     }),
     // 处理html
     new HtmlWebpackPlugin({
@@ -109,6 +108,22 @@ module.exports = merge.smart(baseWebpackConfig, {
       filename: 'css/[name].[contenthash:8].css'
       // chunkFilename: '[name].[contenthash:8].chunk.css'
     }),
+    new NyanProgressPlugin({
+      // 获取进度的时间间隔，默认 180 ms
+      debounceInterval: 60,
+      nyanCatSays(progress, messages) {
+        try {
+          if (progress === 1) {
+            // 当构建完成时，喊出「呦，又在写 Bug 了？」
+            return '不错嘛，成功啦！🎉'
+          } else {
+            return '加速加速～🚗'
+          }
+        } catch (error) {
+          return `完蛋玩意，有BUG🐛\n${messages}`
+        }
+      }
+    }),
     new CompressionWebpackPlugin({
       filename: '[path].gz[query]',
       algorithm: 'gzip',
@@ -117,6 +132,9 @@ module.exports = merge.smart(baseWebpackConfig, {
       minRatio: 0.8
     }),
   ],
+  entry: {
+    app: './src/index.tsx'
+  },
   optimization: {
     splitChunks: {
       chunks: 'all',

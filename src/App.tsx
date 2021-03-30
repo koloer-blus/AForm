@@ -1,11 +1,11 @@
-import React from 'react'
-import LayoutPage from '@/pages/Layout/index'
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <LayoutPage></LayoutPage>
-    </div>
-  )
-}
+import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { routes } from '@/router/router';
+import { RenderRoutes } from '@/router/RenderRoutes';
+import '@/App.less';
 
-export default App
+const App: React.FC = () => {
+  return <Router>{RenderRoutes(routes)}</Router>;
+};
+
+export default App;

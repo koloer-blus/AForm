@@ -1,13 +1,15 @@
 const path = require('path');
 const merge = require('webpack-merge');
-const baseWebpackConfig = require('./webpack.base');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const webpack = require('webpack');
 const portfinder = require('portfinder');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+
 const config = require('./config');
 const getClientEnvironment = require('./env');
 
+const baseWebpackConfig = require('./webpack.base');
 const env = getClientEnvironment(config.publicPath);
 
 const devWebpackConfig = merge.smart(baseWebpackConfig, {
@@ -15,13 +17,6 @@ const devWebpackConfig = merge.smart(baseWebpackConfig, {
   output: {
     filename: 'js/[name].[hash:8].js',
     publicPath: config.publicPath
-  },
-  module: {
-    rules: [
-      {
-        oneOf: []
-      }
-    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -31,6 +26,7 @@ const devWebpackConfig = merge.smart(baseWebpackConfig, {
       },
       hash: false
     }),
+    new DashboardPlugin(),
     new InterpolateHtmlPlugin(env.raw),
     new webpack.HotModuleReplacementPlugin()
   ],

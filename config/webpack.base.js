@@ -6,20 +6,24 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+
+//传入自定义配置
 const config = require('./config');
+const REACT_APP_PATH = path.resolve(__dirname, '../src');
 const getClientEnvironment = require('./env');
-
-const APP_PATH = path.resolve(__dirname, '../src');
-
 const bundleAnalyzerReport = argv.report;
 const env = getClientEnvironment(config.publicPath);
+
 
 const webpackConfig = {
   plugins: []
 };
 if (bundleAnalyzerReport) {
   webpackConfig.plugins.push(new BundleAnalyzerPlugin({
+    analyzerPort: 8081,
     analyzerMode: 'static',
     openAnalyzer: false,
     reportFilename: path.join(config.assetsRoot, './report.html')
@@ -43,7 +47,7 @@ module.exports = merge(webpackConfig, {
         enforce: 'pre',
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        include: [APP_PATH],
+        include: [REACT_APP_PATH],
         loader: 'eslint-loader',
         options: {
           emitWarning: true,
@@ -59,26 +63,43 @@ module.exports = merge(webpackConfig, {
           },
           {
             test: /\.(j|t)sx?$/,
-            include: APP_PATH,
+            include: REACT_APP_PATH,
             use: [
+              {
+                loader: 'thread-loader',
+                options: {
+                  // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+                  workers: require('os').cpus().length - 1,
+                  poolTimeout: Infinity // set this to Infinity in watch mode - see https://github.com/webpack-contrib/thread-loader
+                },
+              },
               {
                 loader: 'babel-loader',
                 options: {
                   presets: [
-                    '@babel/preset-react',  // jsx支持
-                    ['@babel/preset-env', { useBuiltIns: 'usage', corejs: 2 }] // 按需使用polyfill
+                    '@babel/preset-react',
+                    ['@babel/preset-env', { useBuiltIns: 'usage', corejs: 2 }]
                   ],
                   plugins: [
                     '@babel/plugin-syntax-dynamic-import',
-                    ['@babel/plugin-proposal-class-properties', { 'loose': true }] // class中的箭头函数中的this指向组件
+                    ['@babel/plugin-proposal-class-properties', { 'loose': true }]
                   ],
                   cacheDirectory: true // 加快编译速度
                 }
               },
+              { loader: 'cache-loader' },
               {
-                loader: 'awesome-typescript-loader',
+                loader: 'thread-loader',
                 options: {
-                  silent: true
+                  // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+                  workers: require('os').cpus().length - 1,
+                  poolTimeout: Infinity // set this to Infinity in watch mode - see https://github.com/webpack-contrib/thread-loader
+                },
+              },
+              {
+                loader: 'ts-loader',
+                options: {
+                  happyPackMode: true // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
                 }
               }
             ]
@@ -93,7 +114,6 @@ module.exports = merge(webpackConfig, {
                   modules: false
                 }
               },
-              'postcss-loader',
               {
                 loader: 'less-loader',
                 options: { javascriptEnabled: true }
@@ -128,26 +148,40 @@ module.exports = merge(webpackConfig, {
     ]
   },
   resolve: {
+    modules: ['node_modules'],
+    mainFiles: ['index'],
+    mainFields: ['browser', 'module', 'main'],
     extensions: ['.js', '.json', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@': path.resolve(__dirname, '../src/')
+      '@': path.resolve(__dirname, '../src/'),
+      'react-dom': '@hot-loader/react-dom',
+      'components': path.resolve(__dirname, '../src/components'),
+      'pages': path.resolve(__dirname, '../src/pages'),
+      'hooks': path.resolve(__dirname, '../src/hooks'),
+      'types': path.resolve(__dirname, '../src/types'),
     }
   },
   plugins: [
     // 清理打包目录
     new CleanWebpackPlugin(),
+    new HardSourceWebpackPlugin(),
+    new HardSourceWebpackPlugin.ExcludeModulePlugin([
+      {
+        // HardSource works with mini-css-extract-plugin but due to how
+        // mini-css emits assets, assets are not emitted on repeated builds with
+        // mini-css and hard-source together. Ignoring the mini-css loader
+        // modules, but not the other css loader modules, excludes the modules
+        // that mini-css needs rebuilt to output assets every time.
+        test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+      },
+    ]),
     new HtmlWebpackPlugin({
       inject: true,
       template: config.indexPath,
       showErrors: true
     }),
-    // 在html模板中能够使用环境变量
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     new InterpolateHtmlPlugin(env.raw),
-    // 在js代码中能够使用环境变量(demo: process.env.NODE_ENV === 'production')
     new webpack.DefinePlugin(env.stringified),
-    // 忽略moment的国际化库
-    // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     new CopyWebpackPlugin([
       {
         from: 'public',
