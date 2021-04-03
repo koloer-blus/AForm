@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, useEffect } from 'react';
+import React, { useMemo, useContext, useEffect, useRef } from 'react';
 import { Form, FormItemProps } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
 import { GlobalFormConf } from '../Form';
@@ -6,36 +6,40 @@ interface IProps extends FormItemProps {
   disabled?: boolean | NamePath[];
 }
 
+const addPropToChild = (children: any, options: any) => {
+  return React.Children.map(children, child => {
+    return React.cloneElement(child, {
+      ...options,
+    });
+  });
+};
+
 function AItem(props: IProps) {
-  const { disabled, rules, label, name, required, ...reset } = props;
+  const { disabled, rules, label, name, required, children, ...reset } = props;
   const FormStore = useContext(GlobalFormConf);
   const defaultRequireRules = useMemo(() => {
     if (required) return rules;
     const labelString = typeof label === 'string' ? label : '本项';
     return [{ required: true, message: `${labelString}不能为空` }, ...(rules || [])];
   }, [label, name, required]);
-
+  const formItemsRef = useRef<any>(
+    addPropToChild(children, {
+      disabled: disabled === undefined ? FormStore.disabled : disabled,
+    })
+  );
   useEffect(() => {
-    if (name && FormStore.formRef) {
-      const AItemInstance = FormStore.formRef.getFieldInstance(name);
-      if (AItemInstance.input) {
-        AItemInstance.input.disabled = disabled === undefined ? FormStore.disabled : disabled;
-        return;
-      }
-      AItemInstance.selectRef && (AItemInstance.selectRef.current.disabled = disabled);
-      console.log(reset.children);
+    if (name) {
+      formItemsRef.current = addPropToChild(children, {
+        disabled: disabled === undefined ? FormStore.disabled : disabled,
+      });
     }
-  }, [props]);
+  }, [disabled]);
 
   return (
-    <Form.Item
-      {...reset}
-      label={label}
-      name={name}
-      required={required}
-      rules={defaultRequireRules}
-    />
+    <Form.Item {...reset} label={label} name={name} required={required} rules={defaultRequireRules}>
+      {formItemsRef.current}
+    </Form.Item>
   );
 }
 
-export default AItem;
+export default React.memo(AItem);

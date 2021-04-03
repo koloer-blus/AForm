@@ -23,19 +23,12 @@ const validateMessages = {
 
 const BaseForm = () => {
   const [result, setResult] = useState<string[]>([]);
-  const handleSearch = (value: string) => {
-    let res: string[] = [];
-    if (!value || value.indexOf('@') >= 0) {
-      res = [];
-    } else {
-      res = ['gmail.com', '163.com', 'qq.com'].map(domain => `${value}@${domain}`);
-    }
-    setResult(res);
-  };
 
   return (
     <AForm {...layout} disabled={true} name="nest-messages" validateMessages={validateMessages}>
       <AItem name={['user', 'name']} label="Name">
+        <Input />
+        <Input />
         <Input />
       </AItem>
       <AItem name={['user', 'email']} label="Email" rules={[{ type: 'email' }]}>
@@ -50,8 +43,10 @@ const BaseForm = () => {
       <AItem name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
         <InputNumber />
       </AItem>
-      <AItem name={['user', 'website']} label="Website">
-        <Input />
+      <AItem label="Website">
+        <AItem name={['user', 'website']} label="Website">
+          <Input />
+        </AItem>
       </AItem>
       <AItem name={['user', 'introduction']} label="Introduction">
         <Input.TextArea />

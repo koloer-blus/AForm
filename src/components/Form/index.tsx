@@ -1,11 +1,4 @@
-import React, {
-  ReactChild,
-  ReactChildren,
-  ReactElement,
-  useContext,
-  useRef,
-  useState,
-} from 'react';
+import React, { ReactChild, ReactElement, useState } from 'react';
 import { Form, FormInstance, FormProps } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
 import * as R from 'ramda';
@@ -55,4 +48,4 @@ function AForm(props: IProps): ReactElement {
   );
 }
 
-export default AForm;
+export default React.memo(AForm);
