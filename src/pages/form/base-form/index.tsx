@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, InputNumber, Button } from 'antd';
-import { useForm } from 'antd/lib/form/Form';
-
+import { Input, InputNumber, Button, AutoComplete } from 'antd';
+import AItem from '@/components/FormItem';
+import AForm from '@/components/Form';
+const { Option } = AutoComplete;
 const layout = {
   labelCol: { span: 4 },
   wrapperCol: { span: 16 },
@@ -21,41 +22,46 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 const BaseForm = () => {
-  const [FormRef] = useForm(undefined);
-  useEffect(() => {
-    console.log('ref', FormRef.__INTERNAL__);
-  }, []);
-  const onFinish = (values: any) => {
-    console.log('field', FormRef.getFieldsValue(true));
+  const [result, setResult] = useState<string[]>([]);
+  const handleSearch = (value: string) => {
+    let res: string[] = [];
+    if (!value || value.indexOf('@') >= 0) {
+      res = [];
+    } else {
+      res = ['gmail.com', '163.com', 'qq.com'].map(domain => `${value}@${domain}`);
+    }
+    setResult(res);
   };
+
   return (
-    <Form
-      form={FormRef}
-      {...layout}
-      name="nest-messages"
-      onFinish={onFinish}
-      validateMessages={validateMessages}>
-      <Form.Item name={['user', 'name']} label="Name">
+    <AForm {...layout} disabled={true} name="nest-messages" validateMessages={validateMessages}>
+      <AItem name={['user', 'name']} label="Name">
         <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'email']} label="Email" rules={[{ type: 'email' }]}>
-        <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
+      </AItem>
+      <AItem name={['user', 'email']} label="Email" rules={[{ type: 'email' }]}>
+        <AutoComplete style={{ width: 200 }} placeholder="input here">
+          {result.map((email: string) => (
+            <Option key={email} value={email}>
+              {email}
+            </Option>
+          ))}
+        </AutoComplete>
+      </AItem>
+      <AItem name={['user', 'age']} label="Age" rules={[{ type: 'number', min: 0, max: 99 }]}>
         <InputNumber />
-      </Form.Item>
-      <Form.Item name={['user', 'website']} label="Website">
+      </AItem>
+      <AItem name={['user', 'website']} label="Website">
         <Input />
-      </Form.Item>
-      <Form.Item name={['user', 'introduction']} label="Introduction">
+      </AItem>
+      <AItem name={['user', 'introduction']} label="Introduction">
         <Input.TextArea />
-      </Form.Item>
-      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+      </AItem>
+      <AItem wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-      </Form.Item>
-    </Form>
+      </AItem>
+    </AForm>
   );
 };
 
