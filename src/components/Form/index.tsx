@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactElement, useState } from 'react';
+import React, { ReactChild, ReactElement, useEffect, useState } from 'react';
 import { Form, FormInstance, FormProps } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
 import * as R from 'ramda';
@@ -25,13 +25,14 @@ const getDefaultValue = (props: IProps) => {
   return defaultProps;
 };
 
-export const GlobalFormConf = React.createContext<IFormGlobalOption>({
-  disabled: false,
-});
+export const GlobalFormConf = React.createContext<IFormGlobalOption>({});
 
 function AForm(props: IProps): ReactElement {
   const { form, children, disabled, ...reset } = getDefaultValue(props);
   const [formDisabled, setFormDisabled] = useState(disabled);
+  useEffect(() => {
+    setFormDisabled(disabled);
+  }, [disabled]);
 
   return (
     <GlobalFormConf.Provider
