@@ -1,6 +1,6 @@
 import loadable from '@loadable/component';
 import { RouteInterface } from '@/types/route';
-export const basename = '';
+export const basename = 'AForm';
 
 export const routes: RouteInterface[] = [
   {
