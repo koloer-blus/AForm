@@ -2,7 +2,7 @@
     "name": "webpack-ts",
     "version": "1.0.0",
     "private": false,
-    "homepage": "https://baiziyu-fe.github.io/AForm",
+    "homepage": "./",
     "dependencies": {
         "@hot-loader/react-dom": "16.13.0",
         "@loadable/component": "^5.12.0",
