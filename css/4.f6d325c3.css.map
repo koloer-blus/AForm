@@ -1,1 +1,0 @@
-{"version":3,"sources":["css ./node_modules/css-loader/dist/cjs.js??ref--5-oneOf-2-2!./node_modules/less-loader/dist/cjs.js??ref--5-oneOf-2-3!./src/pages/base-layout/style.less"],"names":[],"mappings":"AAAA,QACA,YACA,CACA,SACA,YACA","file":"4.f6d325c3.css","sourcesContent":[".layout {\n  height: 100vh;\n}\n.content {\n  padding: 32px;\n}\n"]}

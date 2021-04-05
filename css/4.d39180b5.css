@@ -1,0 +1,1 @@
+.layout{height:100vh}.content{padding:32px}.layout-sider{height:calc(100vh - 64px);border-right:1px solid #aaa;box-shadow:1px 0 2px 2px #ccc}.layout-header{padding:0}.layout-header,.menu-router-item{border-bottom:1px solid #aaa}
