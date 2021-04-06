@@ -31,7 +31,7 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-const BaseForm = () => {
+const DisabledForm = () => {
   const [disabled, setDisabled] = useState(false);
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
@@ -198,4 +198,4 @@ const BaseForm = () => {
   );
 };
 
-export default BaseForm;
+export default DisabledForm;

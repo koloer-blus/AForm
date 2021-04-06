@@ -1,4 +1,4 @@
-import React, { useMemo, useContext, useEffect, useRef } from 'react';
+import React, { useMemo, useContext } from 'react';
 import { Form, FormItemProps } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
 import { GlobalFormStore } from '../Form';
@@ -22,7 +22,6 @@ function AItem(props: IProps) {
    * 绑定默认验证规则
    */
   const defaultRequireRules = useMemo(() => {
-    if (disabled) return [];
     if (required) return rules;
     const labelString = typeof label === 'string' ? label : '本项';
     return [{ required: true, message: `${labelString}不能为空` }, ...(rules || [])];

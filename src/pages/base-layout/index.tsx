@@ -20,7 +20,10 @@ const BaseLayout = () => {
         <Sider className="layout-sider">
           <Menu>
             <Menu.Item className="menu-router-item">
-              <Link to="/">disabled</Link>
+              <Link to="/disabled">disabled</Link>
+            </Menu.Item>
+            <Menu.Item className="menu-router-item">
+              <Link to="/current-state">current</Link>
             </Menu.Item>
           </Menu>
         </Sider>
