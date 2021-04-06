@@ -22,20 +22,23 @@ const getDefaultValue = (props: IProps) => {
   if (props.disabled === undefined) {
     defaultProps.disabled = false;
   }
+  if (props.disabled) {
+    delete defaultProps.onFinish;
+    delete defaultProps.form;
+  }
   return defaultProps;
 };
 
-export const GlobalFormConf = React.createContext<IFormGlobalOption>({});
+export const GlobalFormStore = React.createContext<IFormGlobalOption>({});
 
 function AForm(props: IProps): ReactElement {
-  const { form, children, disabled, ...reset } = getDefaultValue(props);
+  const { form, children, disabled, onFinish, ...reset } = getDefaultValue(props);
   const [formDisabled, setFormDisabled] = useState(disabled);
   useEffect(() => {
     setFormDisabled(disabled);
   }, [disabled]);
-
   return (
-    <GlobalFormConf.Provider
+    <GlobalFormStore.Provider
       value={{
         disabled: formDisabled,
         formRef: form,
@@ -45,7 +48,7 @@ function AForm(props: IProps): ReactElement {
       <Form form={form} {...reset}>
         {props.children}
       </Form>
-    </GlobalFormConf.Provider>
+    </GlobalFormStore.Provider>
   );
 }
 

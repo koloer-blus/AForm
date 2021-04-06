@@ -1,7 +1,7 @@
 import React, { useMemo, useContext, useEffect, useRef } from 'react';
 import { Form, FormItemProps } from 'antd';
-import { InternalNamePath, NamePath } from 'antd/lib/form/interface';
-import { GlobalFormConf } from '../Form';
+import { NamePath } from 'antd/lib/form/interface';
+import { GlobalFormStore } from '../Form';
 interface IProps extends FormItemProps {
   disabled?: boolean | NamePath[];
 }
@@ -16,12 +16,13 @@ const addPropToChild = (children: any, options: any) => {
 
 function AItem(props: IProps) {
   const { disabled, rules, label, name, required, children, ...reset } = props;
-  const FormStore = useContext(GlobalFormConf);
+  const FormStore = useContext(GlobalFormStore);
 
   /**
    * 绑定默认验证规则
    */
   const defaultRequireRules = useMemo(() => {
+    if (disabled) return [];
     if (required) return rules;
     const labelString = typeof label === 'string' ? label : '本项';
     return [{ required: true, message: `${labelString}不能为空` }, ...(rules || [])];
@@ -33,7 +34,9 @@ function AItem(props: IProps) {
   const formItems = useMemo(() => {
     if (
       (name && (Array.isArray(name) || typeof name === 'string') && name.length) ||
-      typeof name === 'number'
+      // @ts-ignore
+      typeof name === 'number' ||
+      (children && children.props && children.props.htmlType === 'submit')
     ) {
       const itemDisabled = disabled === undefined ? FormStore.disabled : disabled;
       return addPropToChild(children, {
