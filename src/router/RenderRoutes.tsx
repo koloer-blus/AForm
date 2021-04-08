@@ -6,9 +6,9 @@ import { RouteWithSubRoutes } from './RouteWithSubRoutes';
 export const RenderRoutes = (routes: RouteInterface[]) => {
   return (
     <Switch>
-      {routes.map((route: RouteInterface, i) => {
-        return RouteWithSubRoutes(route, i);
-      })}
+      {routes.map((route, i) => (
+        <RouteWithSubRoutes key={i} {...route} />
+      ))}
     </Switch>
   );
 };

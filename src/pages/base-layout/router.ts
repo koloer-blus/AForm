@@ -1,17 +1,15 @@
-import loadable from '@loadable/component';
+import React from 'react';
 import { RouteInterface } from '@/types/route';
 
 export const routes: RouteInterface[] = [
   {
-    path: '/AForm/disabled',
-    component: loadable(() => import('@/pages/form/disabled-form')),
-    name: 'disabled-Form',
-    title: 'disabled-Form',
+    path: '/disabled',
+    component: React.lazy(() => import('@/pages/disabled-form')),
+    name: 'DisabledForm',
   },
-  // {
-  //   path: '/AForm/current-state',
-  //   component: loadable(() => import('@/pages/form/current-state-form')),
-  //   name: 'current-Form',
-  //   title: 'current-Form'
-  // },
+  {
+    path: '/current-state',
+    component: React.lazy(() => import('@/pages/current-state-form')),
+    name: 'CurrentStateForm',
+  },
 ];

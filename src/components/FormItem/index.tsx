@@ -2,6 +2,7 @@ import React, { useMemo, useContext } from 'react';
 import { Form, FormItemProps } from 'antd';
 import { NamePath } from 'antd/lib/form/interface';
 import { GlobalFormStore } from '../Form';
+import R from 'ramda';
 interface IProps extends FormItemProps {
   disabled?: boolean | NamePath[];
 }
@@ -33,8 +34,8 @@ function AItem(props: IProps) {
   const formItems = useMemo(() => {
     if (
       (name && (Array.isArray(name) || typeof name === 'string') && name.length) ||
-      // @ts-ignore
       typeof name === 'number' ||
+      // @ts-ignore
       (children && children.props && children.props.htmlType === 'submit')
     ) {
       const itemDisabled = disabled === undefined ? FormStore.disabled : disabled;

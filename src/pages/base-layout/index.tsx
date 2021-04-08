@@ -1,11 +1,10 @@
 import React from 'react';
 import { Layout, Menu, Typography } from 'antd';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { routes } from './router';
 import { RenderRoutes } from '@/router/RenderRoutes';
 import './style.less';
-const { SubMenu } = Menu;
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
 const BaseLayout = () => {
@@ -20,16 +19,14 @@ const BaseLayout = () => {
         <Sider className="layout-sider">
           <Menu>
             <Menu.Item className="menu-router-item">
-              <Link to="/disabled">disabled</Link>
+              <NavLink to="/disabled">disabled</NavLink>
             </Menu.Item>
             <Menu.Item className="menu-router-item">
-              <Link to="/current-state">current</Link>
+              <NavLink to="/current-state">current</NavLink>
             </Menu.Item>
           </Menu>
         </Sider>
-        <Content className="content">
-          <Router>{RenderRoutes(routes)}</Router>
-        </Content>
+        <Content className="content">{RenderRoutes(routes)}</Content>
       </Layout>
     </Layout>
   );

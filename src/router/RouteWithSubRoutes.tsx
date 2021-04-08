@@ -2,13 +2,11 @@ import React from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { RouteInterface } from '@/types/route';
 
-export const RouteWithSubRoutes = (route: RouteInterface, index: number) => {
+export function RouteWithSubRoutes(route: RouteInterface) {
   return (
     <Route
-      key={index}
       path={route.path}
-      exact={route.exact}
-      render={(props: RouteComponentProps) => <route.component {...props} routes={route.routes} />}
+      render={props => <route.component {...props} routes={route.routes} />}
     />
   );
-};
+}
