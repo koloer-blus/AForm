@@ -1,21 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import AItem from '@/components/FormItem';
 import AForm from '@/components/Form';
-import {
-  Form,
-  Select,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-} from 'antd';
-import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
+import { Select, InputNumber, Switch, Radio, Slider, Button, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const layout = {
