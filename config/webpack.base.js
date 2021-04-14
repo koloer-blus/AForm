@@ -8,6 +8,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CommonStylePlugin = require('../plugins/common-style-plugin');
+const AformStyle = require('../src/ui-style/lib/index');
 
 
 //传入自定义配置
@@ -175,6 +177,9 @@ module.exports = merge(webpackConfig, {
         test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
       },
     ]),
+    new CommonStylePlugin({
+      cssStyleString: AformStyle.styleString,
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: config.indexPath,
