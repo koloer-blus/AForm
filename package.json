@@ -7,7 +7,7 @@
         "@hot-loader/react-dom": "16.13.0",
         "@loadable/component": "^5.12.0",
         "antd": "^4.15.0",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "core-js": "^2.6.9",
         "hard-source-webpack-plugin": "^0.13.1",
         "nyan-progress-webpack-plugin": "^1.2.0",
